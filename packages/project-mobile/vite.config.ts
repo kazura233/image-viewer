@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import eslint from 'vite-plugin-eslint'
 import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
@@ -15,7 +14,7 @@ export default defineConfig(({ command, mode }) => {
         '~': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-    plugins: [eslint(), react()],
+    plugins: [react()],
     server: {
       host: '0.0.0.0',
       port: 65233,
