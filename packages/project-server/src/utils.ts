@@ -11,12 +11,16 @@ export interface FileInfo {
 
 export const getFileInfo = (dir: string, file: string): FileInfo => {
   const filePath = path.join(dir, file)
-  const stats = fs.statSync(filePath)
-  if (stats.isFile()) {
-    return { filePath, file, type: 'file' }
-  }
-  if (stats.isDirectory()) {
-    return { filePath, file, type: 'dir' }
+  try {
+    const stats = fs.statSync(filePath)
+    if (stats.isFile()) {
+      return { filePath, file, type: 'file' }
+    }
+    if (stats.isDirectory()) {
+      return { filePath, file, type: 'dir' }
+    }
+  } catch {
+    // 断链的符号链接或无权限访问的条目
   }
   return { filePath, file, type: 'other' }
 }
@@ -24,8 +28,9 @@ export const getFileInfo = (dir: string, file: string): FileInfo => {
 export const getFiles = (dir: string): FileInfo[] => {
   const files = fs.readdirSync(dir)
   return files
+    .filter((file) => !file.startsWith('.'))
     .map((file) => getFileInfo(dir, file))
-    .filter((file) => !(file.file.startsWith('.') || file.type === 'other'))
+    .filter((file) => file.type !== 'other')
 }
 
 export const compressImage = async (dir: string): Promise<Buffer | null> => {
