@@ -16,6 +16,10 @@ interface FileInfo {
   type: 'file' | 'dir' | 'other'
 }
 
+const IMAGE_EXTS = ['jpg', 'png', 'jpeg', 'gif', 'bmp', 'webp']
+
+const isImage = (file: string) => IMAGE_EXTS.includes(file.toLowerCase().split('.').pop() ?? '')
+
 const Item: React.FC<{
   item: FileInfo
 }> = ({ item: { filePath, file, type } }) => {
@@ -31,16 +35,7 @@ const Item: React.FC<{
     )
   }
 
-  const fileName = file.toLowerCase()
-  const fileext = fileName.split('.').pop()
-
-  if (
-    fileext === 'jpg' ||
-    fileext === 'png' ||
-    fileext === 'jpeg' ||
-    fileext === 'gif' ||
-    fileext === 'bmp'
-  ) {
+  if (isImage(file)) {
     return (
       <div>
         <img src={enUrl('/api/img' + filePath)} alt="" width="100%" />
@@ -68,17 +63,7 @@ const PageIndex: React.FC = () => {
 
   const demoImages = useMemo(() => {
     return list
-      .filter((item) => {
-        const fileName = item.file.toLowerCase()
-        const fileext = fileName.split('.').pop()
-        return (
-          fileext === 'jpg' ||
-          fileext === 'png' ||
-          fileext === 'jpeg' ||
-          fileext === 'gif' ||
-          fileext === 'bmp'
-        )
-      })
+      .filter((item) => isImage(item.file))
       .map((item) => {
         return enUrl('/api/img' + item.filePath)
       })

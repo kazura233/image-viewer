@@ -40,7 +40,7 @@ export const compressImage = async (dir: string): Promise<Buffer | null> => {
   if (!fileType) return null
 
   // 进行压缩
-  if (['jpg', 'png', 'bmp'].includes(fileType.ext)) {
+  if (['jpg', 'png', 'bmp', 'webp'].includes(fileType.ext)) {
     return await sharp(file)
       .jpeg({ quality: 80 })
       .flatten({ background: { r: 255, g: 255, b: 255, alpha: 1 } })
